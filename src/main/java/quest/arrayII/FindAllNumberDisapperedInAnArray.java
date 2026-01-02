@@ -24,6 +24,9 @@ package quest.arrayII;
  *
  * Follow up: Could you do it without extra space and in O(n) runtime? You may assume the returned list does not count as extra space.
  */
+
+import java.util.List;
+import java.util.ArrayList;
 public class FindAllNumberDisapperedInAnArray {
 
     class Solution {
