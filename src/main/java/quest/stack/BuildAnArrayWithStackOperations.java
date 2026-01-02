@@ -53,7 +53,8 @@ package quest.stack;
  * 1 <= target[i] <= n
  * target is strictly increasing.
  */
-
+import java.util.List;
+import java.util.ArrayList;
 public class BuildAnArrayWithStackOperations {
     class Solution {
         public List<String> buildArray(int[] target, int n) {

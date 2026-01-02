@@ -43,6 +43,11 @@ package quest.stack;
  * 1 <= tokens.length <= 104
  * tokens[i] is either an operator: "+", "-", "*", or "/", or an integer in the range [-200, 200].
  */
+import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Map;
+import java.util.function.IntBinaryOperator;
 public class EvaluateReversePolishNotation {
     class Solution {
         public int evalRPN(String[] tokens) {

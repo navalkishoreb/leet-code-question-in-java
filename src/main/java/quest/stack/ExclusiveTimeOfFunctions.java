@@ -61,6 +61,10 @@ package quest.stack;
  * No two end events will happen at the same timestamp.
  * Each function has an "end" log for each "start" log.
  */
+
+import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Deque;
 public class ExclusiveTimeOfFunctions {
     class Solution {
         public int[] exclusiveTime(int n, List<String> logs) {
