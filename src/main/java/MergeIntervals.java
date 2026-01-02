@@ -40,57 +40,58 @@ public class MergeIntervals {
         System.out.println(Arrays.deepToString(solution.merge(testCase3)));
     }
 
-
-}
-
-class Solution {
-    public int[][] merge(int[][] intervals) {
-        List<int[]> result = new ArrayList<>();
-        if (intervals == null || intervals.length == 0) {
-            return new int[][]{};
-        }
-
-        Arrays.sort(intervals, Comparator.comparingInt(a -> a[0]));
-        int start = intervals[0][0];
-        int end = intervals[0][1];
-        for (int i = 1; i < intervals.length; i++) {
-            if (intervals[i][0] <= end) {
-                end = Math.max(end, intervals[i][1]);
-            } else {
-                result.add(new int[]{start, end});
-                start = intervals[i][0];
-                end = intervals[i][1];
+    static class Solution {
+        public int[][] merge(int[][] intervals) {
+            List<int[]> result = new ArrayList<>();
+            if (intervals == null || intervals.length == 0) {
+                return new int[][]{};
             }
-        }
-        result.add(new int[]{start, end});
-        return result.toArray(new int[result.size()][]);
 
-    }
-}
-
-class Solution2 {
-    public int[][] merge(int[][] intervals) {
-        if (intervals == null || intervals.length == 0) {
-            return new int[0][0];
-        }
-
-        Arrays.sort(intervals, Comparator.comparingInt(a -> a[0]));
-
-        List<int[]> result = new ArrayList<>();
-        int[] current = intervals[0];
-        result.add(current);
-
-        for (int i = 1; i < intervals.length; i++) {
-            int[] next = intervals[i];
-
-            if (next[0] <= current[1]) {
-                // merge
-                current[1] = Math.max(current[1], next[1]);
-            } else {
-                current = next;
-                result.add(current);
+            Arrays.sort(intervals, Comparator.comparingInt(a -> a[0]));
+            int start = intervals[0][0];
+            int end = intervals[0][1];
+            for (int i = 1; i < intervals.length; i++) {
+                if (intervals[i][0] <= end) {
+                    end = Math.max(end, intervals[i][1]);
+                } else {
+                    result.add(new int[]{start, end});
+                    start = intervals[i][0];
+                    end = intervals[i][1];
+                }
             }
+            result.add(new int[]{start, end});
+            return result.toArray(new int[result.size()][]);
+
         }
-        return result.toArray(new int[result.size()][]);
     }
+
+    class Solution2 {
+        // more read-able solution
+        public int[][] merge(int[][] intervals) {
+            if (intervals == null || intervals.length == 0) {
+                return new int[0][0];
+            }
+
+            Arrays.sort(intervals, Comparator.comparingInt(a -> a[0]));
+
+            List<int[]> result = new ArrayList<>();
+            int[] current = intervals[0];
+            result.add(current);
+
+            for (int i = 1; i < intervals.length; i++) {
+                int[] next = intervals[i];
+
+                if (next[0] <= current[1]) {
+                    // merge
+                    current[1] = Math.max(current[1], next[1]);
+                } else {
+                    current = next;
+                    result.add(current);
+                }
+            }
+            return result.toArray(new int[result.size()][]);
+        }
+    }
+
 }
+

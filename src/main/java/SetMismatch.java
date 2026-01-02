@@ -28,55 +28,59 @@
  * No
  */
 public class SetMismatch {
-}
 
-class Solution1 {
-    public int[] findErrorNums(int[] nums) {
-        // with O(n) space
-        int[] expected = new int[nums.length+1];
-        for (int i = 1; i < nums.length+1; i ++){
-            expected[i] = 1;
-        }
-        int duplicate = -1;
-        for (int i = 0; i < nums.length; i ++){
-            if (expected[nums[i]] == 1){
-                expected[nums[i]] = 0;
-            }else{
-                duplicate = nums[i];
+    class Solution1 {
+        public int[] findErrorNums(int[] nums) {
+            // with O(n) space
+            int[] expected = new int[nums.length + 1];
+            for (int i = 1; i < nums.length + 1; i++) {
+                expected[i] = 1;
             }
-        }
-        int missing = -1;
-        for (int i = 1; i < nums.length + 1; i++){
-            if (expected[i] == 1){
-                missing = i;
-                break;
+            int duplicate = -1;
+            for (int i = 0; i < nums.length; i++) {
+                if (expected[nums[i]] == 1) {
+                    expected[nums[i]] = 0;
+                } else {
+                    duplicate = nums[i];
+                }
             }
-        }
-        return new int[]{duplicate, missing};
+            int missing = -1;
+            for (int i = 1; i < nums.length + 1; i++) {
+                if (expected[i] == 1) {
+                    missing = i;
+                    break;
+                }
+            }
+            return new int[]{duplicate, missing};
 
+        }
+    }
+
+    class Solution2 {
+        // with not extra space
+        public int[] findErrorNums(int[] nums) {
+            int duplicate = -1;
+            int missing = -1;
+
+            for (int i = 0; i < nums.length; i++) {
+                int index = Math.abs(nums[i]) - 1;
+                if (nums[index] < 0) {
+                    duplicate = index + 1;
+                } else {
+                    nums[index] = -nums[index];
+                }
+            }
+            for (int i = 0; i < nums.length; i++) {
+                if (nums[i] > 0) {
+                    missing = i + 1;
+                    break;
+                }
+            }
+            return new int[]{duplicate, missing};
+
+        }
     }
 }
-class Solution2 {
-    // with not extra space
-    public int[] findErrorNums(int[] nums) {
-        int duplicate = -1;
-        int missing = -1;
 
-        for (int i = 0; i < nums.length; i++) {
-            int index = Math.abs(nums[i]) - 1;
-            if (nums[index] < 0) {
-                duplicate = index + 1;
-            } else {
-                nums[index] = -nums[index];
-            }
-        }
-        for (int i = 0; i < nums.length; i++) {
-            if (nums[i] > 0) {
-                missing = i + 1;
-                break;
-            }
-        }
-        return new int[] { duplicate, missing };
 
-    }
-}
+
