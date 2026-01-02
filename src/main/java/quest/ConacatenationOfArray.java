@@ -1,3 +1,5 @@
+package quest;
+
 /**
  * Q1. Concatenation of Array
  * Easy
