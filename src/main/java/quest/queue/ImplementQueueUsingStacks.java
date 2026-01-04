@@ -44,6 +44,8 @@ package quest.queue;
  * Follow-up: Can you implement the queue such that each operation is amortized O(1) time complexity?
  * In other words, performing n operations will take overall O(n) time even if one of those operations may take longer.
  */
+import java.util.ArrayDeque;
+import java.util.Deque;
 public class ImplementQueueUsingStacks {
     class MyQueue {
 
