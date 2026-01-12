@@ -32,13 +32,14 @@ package quest.heap;
 
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
 public class FindKPairsWithSmallestSum {
     class Solution {
         public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
-            PriorityQueue<int[]> minHeap = new PriorityQueue<>((int[] a, int[] b) -> a[2] - b[2]);
+            PriorityQueue<int[]> minHeap = new PriorityQueue<>(Comparator.comparingInt((int[] a) -> a[2]));
             List<List<Integer>> res = new ArrayList<>();
 
             for (int i = 0; i < nums1.length; i++) {
@@ -47,9 +48,9 @@ public class FindKPairsWithSmallestSum {
             int i = 0;
             while (i != k) {
                 int[] data = minHeap.poll();
+                if(data == null) break;
                 int u = data[0];
                 int v = data[1];
-                int sum = data[2];
                 res.add(List.of(nums1[u], nums2[v]));
                 if (v + 1 < nums2.length) {
                     minHeap.add(new int[]{u, v + 1, nums1[u] + nums2[v + 1]});
