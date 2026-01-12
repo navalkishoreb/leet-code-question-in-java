@@ -35,24 +35,28 @@ import java.util.PriorityQueue;
  * <p>
  * Constraints:
  * <p>
- * n == target.length
- * 1 <= n <= 5 * 104
- * 1 <= target[i] <= 109
+ Constraints:
+
+ n == target.length
+ 1 <= n <= 5 * 104
+ 1 <= target[i] <= 10^9
  */
 public class ConstructTargetArrayWithMultipleSums {
     class Solution {
         public boolean isPossible(int[] target) {
             // “Can we repeatedly reduce the largest element by subtracting the sum of all others, until all elements become 1?”
-            PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Comparator.reverseOrder());
-            int sum = 0, prev = 0;
+            PriorityQueue<Long> maxHeap = new PriorityQueue<>(Comparator.reverseOrder());
+            // sum needs to be long as each element can be 10^9 and can lead to int overflow
+            long sum = 0;
+            long prev;
             for (int i = 0; i < target.length; i++) {
-                maxHeap.offer(target[i]);
+                maxHeap.offer((long)target[i]);
                 sum += target[i];
             }
 
             while (true) {
-                int max = maxHeap.poll();
-                int rest = sum - max;
+                long max = maxHeap.poll();
+                long rest = sum - max;
                 // target = [1, 1, 1, 1]
                 // target = [1, 8]
                 // target = [1, 1000000000]
