@@ -50,13 +50,11 @@ public class HowManyNumbersAreSmallerThanCurrent {
 
             // prepare result
             for (int i = 0; i < nums.length; i++) {
-                int index = nums[i];
-                if (index == 0) {
-                    // because of contraint there will be no value
-                    // below than zero.
-                    res[i] = 0;
-                } else {
-                    res[i] = count[index - 1];
+                // int index = nums[i];
+                if (nums[i] != 0) {
+                    // because of constraint there will be no value
+                    // below than one.
+                    res[i] = count[nums[i] - 1];
                 }
             }
             return res;
