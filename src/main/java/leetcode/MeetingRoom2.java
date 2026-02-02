@@ -60,7 +60,6 @@ public class MeetingRoom2 {
 
     class Solution {
         public int minMeetingRooms(List<Interval> intervals) {
-            int n = intervals.size();
             List<Node> data = new ArrayList<>();
             for (Interval interval : intervals) {
                 data.add(new Node(1, interval.start));

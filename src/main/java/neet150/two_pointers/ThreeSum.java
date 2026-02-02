@@ -36,6 +36,39 @@ Constraints:
 -10^5 <= nums[i] <= 10^5
 
 */
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ThreeSum {
+    class Solution {
+        public List<List<Integer>> threeSum(int[] nums) {
+            List<List<Integer>> res = new ArrayList<>();
+            Arrays.sort(nums);
+            for (int i = 0; i < nums.length; i++) {
+                int a = nums[i];
+                int j = i + 1;
+                int k = nums.length - 1;
+                if (i > 0 && nums[i] == nums[i - 1])
+                    continue;
+                while (j < k) {
+                    int b = nums[j];
+                    int c = nums[k];
+                    int sum = a + b + c;
+                    if (sum == 0) {
+                        res.add(List.of(a, b, c));
+                        j++;
+                        k--;
+                    } else if (sum > 0) {
+                        k--;
+                    } else {
+                        j++;
+                    }
+                }
+            }
+            return res;
+        }
+    }
 
 }
