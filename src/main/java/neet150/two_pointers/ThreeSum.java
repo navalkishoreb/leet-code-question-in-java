@@ -58,6 +58,10 @@ public class ThreeSum {
                     int sum = a + b + c;
                     if (sum == 0) {
                         res.add(List.of(a, b, c));
+                        while (j < k && nums[j] == nums[j + 1])
+                            j++;
+                        while (j < k && nums[k] == nums[k - 1])
+                            k--;
                         j++;
                         k--;
                     } else if (sum > 0) {
@@ -70,5 +74,4 @@ public class ThreeSum {
             return res;
         }
     }
-
 }
