@@ -1,0 +1,25 @@
+
+1. StringBuilder vs StringBuffer
+    single thread | thread safe synchonized append method
+    90% time used | rare use-cases
+
+2. Why String is immutable 
+    used in multiple places --> filename, query, maps
+    we don't want to be modified
+
+3. final ,finally, finalize
+    immuatable references | try catch block to be executed everytime | GC object now deprecated
+
+4. volatile
+    ✅ One-writer, many-reader scenarios
+    “volatile guarantees visibility, not atomicity.” --> i++ not correct
+    When Thread A writes to a volatile variable:
+    Thread B is guaranteed to see the updated value immediately.
+    Without volatile:
+        Thread B may read a stale cached value
+        The update may never be observed
+
+5. synchonized vs reentrant lock
+    synchonized is kyeword applied on objects , methods or class
+    
+
