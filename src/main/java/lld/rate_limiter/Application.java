@@ -3,6 +3,7 @@ package lld.rate_limiter;
 import java.time.LocalDateTime;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Application {
@@ -17,7 +18,13 @@ public class Application {
         for (int i = 0; i < clientCount; i++) {
             clientPool.submit(new Client("p" + i, apiServive, 500));
         }
-        logAtEverySecond();
+//        Executors.newSingleThreadScheduledExecutor()
+//                .scheduleAtFixedRate(
+//                        () -> System.out.println("---- " + LocalDateTime.now() + " ----"),
+//                        0, 1, TimeUnit.SECONDS
+//                );
+
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> System.out.println("--------------" + LocalDateTime.now() + "---------------"), 0, 1, TimeUnit.SECONDS);
     }
 
     private static void logAtEverySecond() {
@@ -110,13 +117,13 @@ class LeakyBucketRateLimiter implements RateLimiter {
     private long lastLeakTime;
     private final ReentrantLock lock;
     private final double leakRatePerMillis;
-    private double currentWaterLevel;
+    private double usedCapacity;
 
     LeakyBucketRateLimiter(int tps, int capacity) {
         this.leakRatePerMillis = tps / 1000.0;
         this.capacity = capacity;
         this.lastLeakTime = System.currentTimeMillis();
-        this.currentWaterLevel = capacity;
+        this.usedCapacity = capacity;
         this.lock = new ReentrantLock(true);
     }
 
@@ -125,8 +132,8 @@ class LeakyBucketRateLimiter implements RateLimiter {
         lock.lock();
         try {
             leak();
-            if (currentWaterLevel < capacity) {
-                currentWaterLevel += 1;
+            if (usedCapacity < capacity) {
+                usedCapacity += 1;
                 return true;
             }
             return false;
@@ -141,8 +148,8 @@ class LeakyBucketRateLimiter implements RateLimiter {
         if (elapsedInMillis <= 0) {
             return;
         }
-        double tokensToRelease = (elapsedInMillis * leakRatePerMillis);
-        currentWaterLevel = Math.max(0, currentWaterLevel - tokensToRelease);
+        double leak = (elapsedInMillis * leakRatePerMillis);
+        usedCapacity = Math.max(0, usedCapacity - leak);
         lastLeakTime = now;
     }
 }
