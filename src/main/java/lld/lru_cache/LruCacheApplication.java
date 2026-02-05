@@ -1,5 +1,7 @@
 package lld.lru_cache;
 
+import lld.lru_cache.models.Node;
+
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.*;
@@ -7,7 +9,7 @@ import java.util.concurrent.*;
 public class LruCacheApplication {
     public static void main(String[] args) {
         int capacity = 5;
-        LRUCache<Integer, String> cache = new LRUCache<>(capacity);
+        LRUCache<Integer, String> cache = new LRUCacheImp2<>(capacity);
         String data = cache.get(1);
         assert data == null : "data should be null as cache not populated";
         cache.put(1, "one");
@@ -39,13 +41,13 @@ public class LruCacheApplication {
 
 
         ExecutorService pool = Executors.newFixedThreadPool(2);
-        pool.submit(new Consumer(1, "one",100, cache));
-        pool.submit(new Consumer(2, "two",100, cache));
-        pool.submit(new Consumer(3, "three",100, cache));
+        pool.submit(new Consumer(1, "one", 100, cache));
+        pool.submit(new Consumer(2, "two", 100, cache));
+        pool.submit(new Consumer(3, "three", 100, cache));
 //        pool.submit(new Print(cache));
-        pool.submit(new Consumer(4, "four",100, cache));
-        pool.submit(new Consumer(5, "five",100, cache));
-        pool.submit(new Consumer(6, "six",100, cache));
+        pool.submit(new Consumer(4, "four", 100, cache));
+        pool.submit(new Consumer(5, "five", 100, cache));
+        pool.submit(new Consumer(6, "six", 100, cache));
 //        pool.submit(new Print(cache));
         pool.shutdown();
         // running iterator while modification are occurring will fail for ConcurrentModification
@@ -89,7 +91,17 @@ public class LruCacheApplication {
     }
 }
 
-class Print implements Runnable{
+interface LRUCache<K, V> {
+    void put(K key, V value);
+
+    V get(K key);
+
+    void print();
+
+    int size();
+}
+
+class Print implements Runnable {
     private final LRUCache<Integer, String> cache;
 
     Print(LRUCache<Integer, String> cache) {
@@ -101,6 +113,7 @@ class Print implements Runnable{
         cache.print();
         sleep();
     }
+
     private void sleep() {
         try {
             Thread.sleep(100);
@@ -125,9 +138,9 @@ class Consumer implements Runnable {
 
     @Override
     public void run() {
-        System.out.println(LocalDateTime.now() + "|"+ key + " was accessed ");
+        System.out.println(LocalDateTime.now() + "|" + key + " was accessed ");
         String data = cache.get(key);
-        if(data == null){
+        if (data == null) {
             cache.put(key, value);
         }
         sleep();
@@ -142,31 +155,13 @@ class Consumer implements Runnable {
     }
 }
 
-class Node<K,V>{
-    private final K key;
-    private final V value;
-
-    Node(K key, V value) {
-        this.key = key;
-        this.value = value;
-    }
-
-    K getKey(){
-        return this.key;
-    }
-
-    V getValue() {
-        return this.value;
-    }
-}
-
-class LRUCache<K, V> {
+class LRUCacheImpl<K, V> implements LRUCache<K, V> {
     private final int capacity;
-//    private final Map<K, V> map;
-    private final Map<K, Node<K,V>> map;
-    private final Deque<Node<K,V>> deque;
+    //    private final Map<K, V> map;
+    private final Map<K, Node<K, V>> map;
+    private final Deque<Node<K, V>> deque;
 
-    public LRUCache(int capacity) {
+    public LRUCacheImpl(int capacity) {
         this.capacity = capacity;
         // hash map doesnot enforce capacity
         // this is just for optimization to capture initial heap space
@@ -200,45 +195,50 @@ class LRUCache<K, V> {
         deque = new ArrayDeque<>(capacity);
     }
 
-    void put(K key, V value) {
+    @Override
+    public void put(K key, V value) {
 //        map.put(key, value);
-        if(map.containsKey(key)){
-            Node<K,V> old = map.get(key);
+        if (map.containsKey(key)) {
+            Node<K, V> old = map.get(key);
             deque.remove(old);
             map.remove(key);
-        }else if(map.size() >= capacity){
-            Node<K,V> node = deque.removeLast();
+        } else if (map.size() >= capacity) {
+            Node<K, V> node = deque.removeLast();
             map.remove(node.getKey());
         }
-        Node<K,V> node = new Node<>(key, value);
+        Node<K, V> node = new Node<>(key, value);
         map.put(key, node);
         deque.addFirst(node);
     }
 
-    V get(K key) {
+    @Override
+    public V get(K key) {
 //        return map.get(key);
-        if(!map.containsKey(key)){
+        if (!map.containsKey(key)) {
             return null;
         }
-        Node<K,V> node = map.get(key);
+        Node<K, V> node = map.get(key);
         deque.remove(node);
         deque.addFirst(node);
         return node.getValue();
     }
 
-    int size() {
+    @Override
+    public int size() {
         return map.size();
     }
 
-    void print(){
+    @Override
+    public void print() {
         // synchornizemap lock get put method not iterator
         // print after pool is terminated
         System.out.print("[");
-        for(K key: map.keySet()){
+        for (K key : map.keySet()) {
             System.out.print(key + ",");
         }
         System.out.println("]");
     }
+
 
 //    void print() {
 //        synchronized (map) {
