@@ -51,31 +51,24 @@ import java.util.Stack;
 public class LargestRectangleInHistogram {
     class Solution {
         public int largestRectangleArea(int[] heights) {
-
             Stack<Integer> stack = new Stack<>();
-            int n = heights.length;
-            int maxArea = 0;
-            for (int i = 0; i <= n; i++) {
-                // to include whole array we assume n+1 elements
-                // and n+1th element to be zero height
-                int curentHeight = i == n ? 0 : heights[i];
-                // maintain stack of increasing height
-                // the moment we se height decreased
-                while (!stack.isEmpty() && curentHeight < heights[stack.peek()]) {
+            int max = heights[0];
+            for (int i = 0; i <= heights.length; i++) {
+                int height = i == heights.length ? 0 : heights[i];
 
+                while (!stack.isEmpty() && heights[stack.peek()] > height) {
+                    // take the case [1,7,2]
                     int right = stack.pop();
-                    int h = heights[right];
-
-                    int left = stack.isEmpty() ? 0 : stack.peek();
-
-                    int w = i - 1 - left;
-                    int area = h * w;
-                    maxArea = Math.max(maxArea, area);
+                    // [1,1] where -1
+                    int left = stack.isEmpty() ? -1 : stack.peek();
+                    int width = i - left - 1;
+                    int area = heights[right] * width;
+                    max = Math.max(max, area);
                 }
+
                 stack.push(i);
             }
-            return maxArea;
-
+            return max;
         }
     }
 
